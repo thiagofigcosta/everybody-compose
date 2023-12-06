@@ -49,11 +49,11 @@ def model_forward(model_name, model, input_seq: torch.Tensor, target_seq: torch.
         output, _ = model(input_seq, target_prev_seq)
     return output
 
-def model_file_name(model_name, n_files, n_epochs):
-    return "{}_{}_{}.pth".format(model_name, "all" if n_files == -1 else n_files, n_epochs)
+def model_file_name(model_name, n_files, n_epochs, genre):
+    return "{}_{}_{}_{}.pth".format(model_name, "all" if n_files == -1 else n_files, genre, n_epochs)
 
-def save_checkpoint(model, paths, model_name, n_files, n_epochs):
-    model_file = model_file_name(model_name, n_files, n_epochs)
+def save_checkpoint(model, paths, model_name, n_files, n_epochs, genre):
+    model_file = model_file_name(model_name, n_files, n_epochs, genre)
     model_path = paths.snapshots_dir / model_file
     torch.save({
         'model': model.state_dict(),
@@ -69,7 +69,7 @@ def load_checkpoint(checkpoint_path, model, device):
     return n_epochs
 
 
-def train(model_name: str, n_epochs: int, device: str, n_files:int=-1, snapshots_freq:int=10, checkpoint: Optional[str] = None):
+def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-1, snapshots_freq:int=10, checkpoint: Optional[str] = None):
     config = toml.load(CONFIG_PATH)
 
     global_config = config["global"]
@@ -79,7 +79,7 @@ def train(model_name: str, n_epochs: int, device: str, n_files:int=-1, snapshots
     print(model)
 
     dataset = BeatsRhythmsDataset(model_config["seq_len"], global_config["random_slice_seed"])
-    dataset.load(global_config["dataset"])
+    dataset.load(genre, global_config["dataset"])
     dataset = dataset.subset_remove_short()
     if n_files > 0:
         dataset = dataset.subset(n_files)
@@ -143,12 +143,12 @@ def train(model_name: str, n_epochs: int, device: str, n_files:int=-1, snapshots
         # save checkpoint with lowest validation loss
         if validation_metrics["loss"] < best_val_loss:
             best_val_loss = validation_metrics["loss"]
-            save_checkpoint(model, paths, model_name, n_files, "best")
+            save_checkpoint(model, paths, model_name, n_files, "best", genre)
             print("Minimum Validation Loss of {:.4f} at epoch {}/{}".format(best_val_loss, epoch, n_epochs))
             
         # save snapshots
         if (epoch + 1) % snapshots_freq == 0:
-            save_checkpoint(model, paths, model_name, n_files, epoch + 1)
+            save_checkpoint(model, paths, model_name, n_files, epoch + 1, genre)
     writer.close()
-    save_checkpoint(model, paths, model_name, n_files, n_epochs)
+    save_checkpoint(model, paths, model_name, n_files, n_epochs, genre)
     return model
