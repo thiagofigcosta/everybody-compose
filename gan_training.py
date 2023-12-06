@@ -33,6 +33,8 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
     netD_config = config["model"][discriminator_name]
     netD = CNNDiscriminator(netG_config["n_notes"], netG_config["seq_len"], netD_config["embed_dim"]).to(device)
     print(netD)
+    generator_full_name = f'gan-G-{generator_name}'
+    discriminator_full_name = f'gan-D-{discriminator_name}'
 
     # Establish convention for real and fake labels during training
     real_label = 1.
@@ -189,17 +191,19 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
             if validation_metrics["accuracy"] > best_val_accuracy:
                 best_val_accuracy = validation_metrics["accuracy"]
                 print("Maximum Validation Accuracy of {:.4f} at epoch {}/{}".format(best_val_accuracy, epoch+1, n_epochs))
+                save_checkpoint(netG, paths, generator_full_name, n_files, "best", genre)
+                save_checkpoint(netD, paths, discriminator_full_name, n_files, "best", genre)
 
             # save snapshots
             if (epoch + 1) % snapshots_freq == 0:
-                save_checkpoint(netG, paths, generator_name, n_files, epoch + 1, genre)
-                save_checkpoint(netD, paths, discriminator_name, n_files, epoch + 1, genre)
+                save_checkpoint(netG, paths, generator_full_name, n_files, epoch + 1, genre)
+                save_checkpoint(netD, paths, discriminator_full_name, n_files, epoch + 1, genre)
 
     writer.close()
     if not test_only:
         # save model
-        save_checkpoint(netG, paths, generator_name, n_files, epoch + 1, genre)
-        save_checkpoint(netD, paths, discriminator_name, n_files, epoch + 1, genre)
+        save_checkpoint(netG, paths, generator_full_name, n_files, epoch + 1, genre)
+        save_checkpoint(netD, paths, discriminator_full_name, n_files, epoch + 1, genre)
     return netG, netD
 
 
