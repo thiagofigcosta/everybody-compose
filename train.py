@@ -1,5 +1,6 @@
 import argparse
 from utils.model import train
+import torch
 
 
 if __name__ == '__main__':
