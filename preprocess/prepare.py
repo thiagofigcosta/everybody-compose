@@ -13,6 +13,7 @@ def extract_midi_files(genre: str):
     """
     print(f'Extracting {genre} midi files...')
     archive_path = f'generated_data/{genre}.zip'
+    
     # get number of midi files
     total = 0
     with zipfile.ZipFile(archive_path, 'r') as zip_ref:
