@@ -92,6 +92,6 @@ To specify the profile to use for generating the predicted sequence, use the `-t
 Here are some examples of how to use these arguments:
 
 ```sh
-# Generate a predicted sequence using the LSTM with Local Attention model, from beats by the user using the keyboard, using the checkpoint at ./.project_data/snapshots/my_checkpoint.pth, on the default device, and using the beta profile with default settings
-python predict_stream.py -m lstm_attn -c ./.project_data/snapshots/my_checkpoint.pth -t beta
+# Generate a predicted sequence using the best performin LSTM with Local Attention model of classical songs, from beats by the user using the keyboard, using the checkpoint at ./.project_data/snapshots/my_checkpoint.pth, on the default device, and using the beta profile with default settings
+python predict_stream.py -m lstm_attn -c ./.project_data/snapshots/lstm_attn_all_classical_best.pth -t beta
 ```
