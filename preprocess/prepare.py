@@ -2,18 +2,17 @@ from typing import IO, Iterable, Tuple
 import zipfile
 
 import numpy as np
-from preprocess.fetch import download
 
-def download_midi_files(dataset: str, midi_url: str):
+
+def extract_midi_files(genre: str):
     """Get an iterator over all MIDI files bytestreams.
     
     Returns:
         - `iterator`: An iterator over all MIDI files bytestreams.
         - `num_files`: The number of MIDI files.
     """
-    archive_path = download(f"{dataset}.zip", midi_url)
-    if archive_path is None:
-        raise RuntimeError("Failed to download the dataset.")
+    print(f'Extracting {genre} midi files...')
+    archive_path = f'generated_data/{genre}.zip'
     # get number of midi files
     total = 0
     with zipfile.ZipFile(archive_path, 'r') as zip_ref:
