@@ -1,8 +1,5 @@
 from torch.utils.data import Dataset
-from preprocess.constants import DATASETS_CONFIG_PATH
-from preprocess.prepare import download_midi_files, parse_melody_to_beats_notes, parse_midi_to_melody
-
-from preprocess.fetch import download
+from preprocess.prepare import extract_midi_files, parse_melody_to_beats_notes, parse_midi_to_melody
 
 import numpy as np
 import toml
@@ -18,13 +15,12 @@ PREPROCESS_SAVE_FREQ = 32
 
 @dataclass
 class MetaData:
-    canonical_composer: str
-    canonical_title: str
-    split: str
+    artist: str
+    title: str
     midi_filename: str
 
-def _processed_name(dataset: str, dataset_type:str):
-    return f"processed_{dataset}_{dataset_type}_v2.pkl"
+def _processed_name(dataset: str, genre: str):
+    return f"processed_{dataset}_{genre}.pkl"
 
 class BeatsRhythmsDataset(Dataset):
     def __init__(self, seq_len, seed = 12345):
@@ -36,16 +32,13 @@ class BeatsRhythmsDataset(Dataset):
         self.rng = np.random.default_rng(seed)
         self.seed = seed
         self.dataset = ""
-        self.dataset_type = ""
 
-    def load(self, dataset = "mastero", mono=True, force_prepare = False):
-        assert mono, "Only mono is supported for now"
+    def load(self, genre, dataset = "lakh", force_prepare = False):
         paths = DataPaths()
-        dataset_type = "mono" if mono else "chords"
-        processed_path = paths.prepared_data_dir / _processed_name(dataset, dataset_type)
-        progress_path = paths.cache_dir / f"progress_{dataset}_{dataset_type}.pkl"
+        processed_path = paths.prepared_data_dir / _processed_name(dataset, genre)
+        progress_path = paths.cache_dir / f"progress_{dataset}_{genre}.pkl"
         self.dataset = dataset
-        self.dataset_type = dataset_type
+
 
         ## Check if we have processed data
         ### Locally processed data
@@ -55,41 +48,35 @@ class BeatsRhythmsDataset(Dataset):
                 state_dict = pickle.load(f)
             self.load_processed(state_dict)
             return
-        ### Remotely processed data
-        config = toml.load(DATASETS_CONFIG_PATH)["datasets"][dataset_type][dataset]
-        if "processed" in config and not force_prepare:
-            prepared = download(_processed_name(dataset, dataset_type), config["processed"])
-            if prepared is None:
-                raise ValueError("Failed to download prepared dataset")
-            with open(prepared, "rb") as f:
-                state_dict = pickle.load(f)
-                self.load_processed(state_dict)
-                return
         
+
         ## Preprocessing
-        midi_files, num_files = download_midi_files(dataset, config["midi"])
-        metadata_path = download(f"metadata_{dataset}.csv", config["metadata"])
-        assert metadata_path is not None, "Failed to download metadata"
+        # # TODO add config args
+        midi_files, num_files = extract_midi_files(genre)
+        metadata_path = "generated_data/sampled_genre_metadata.csv"
+
         metadata = {}
         with open(metadata_path, "r", encoding="utf-8") as f:
             for row in csv.DictReader(f):
                 metadata[row["midi_filename"]] = MetaData(
-                    canonical_composer=row["canonical_composer"],
-                    canonical_title=row["canonical_title"],
-                    split=row["split"],
+                    artist=row["artist_name"],
+                    title=row["title"],
                     midi_filename=row["midi_filename"],
                 )
 
         skip = 0
+
         if progress_path.exists():
             with open(progress_path, "rb") as f:
                 state_dict = pickle.load(f)
             self.load_processed(state_dict)
             skip = len(self.metadata_list)
             print(f"Resuming from {skip} files")
+
         bar = tqdm(total=num_files, desc = "Processing MIDI files")
         warnings_cnt, errors_cnt, saved = 0, 0, 0
         for filename, io in midi_files:
+            filename = filename[len(genre)+1:]
             if skip > 0:
                 skip -= 1
                 bar.update(1)
@@ -110,8 +97,7 @@ class BeatsRhythmsDataset(Dataset):
             except Exception:
                 errors_cnt += 1
                 bar.set_description(f"Parsing MIDI files ({warnings_cnt} warns, {errors_cnt} errors)", refresh=True)
-            if "truncate" in config:
-                filename = filename[len(config["truncate"]):]
+
             if beats is not None and notes is not None:
                 self.beats_list.append(beats)
                 self.notes_list.append(notes) 
@@ -211,11 +197,3 @@ class BeatsRhythmsDataset(Dataset):
         from note_seq.midi_io import note_sequence_to_midi_file
         stream = self.to_stream(idx)
         note_sequence_to_midi_file(stream, midi_path)
-
-
-# def collate_fn(batch):
-#     X, y, y_prev = zip(*batch)
-#     X = np.array(X)
-#     y = np.array(y)
-#     y_prev = np.array(y_prev)
-#     return X, y, y_prev
