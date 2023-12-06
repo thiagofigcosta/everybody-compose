@@ -17,6 +17,13 @@ You may encouter dependency issues during training on `protobuf`. If so, try rei
 ```sh
 pip install --upgrade tensorboard
 ```
+
+And also upgrade `pip` by running:
+
+```sh
+pip install --upgrade pip
+``````
+
 This issue is due to an conflicting requirements of `note_seq` and `tensorboard`.
 
 We have also provided a [Colab Notebook](https://colab.research.google.com/drive/1oVn-lZI1K23EC9py6UibDOL7swQGp4v9?usp=sharing#scrollTo=kp6HIjuYvoye) for your reference.
@@ -28,6 +35,13 @@ The preprocessed dataset will automatically be downloaded before training. To tr
 - `vanilla_rnn`: Decoder Only Vanilla RNN
 - `attention_rnn`: LSTM with Full Attention
 - `transformer`: Transformer RPR
+
+You have to also specify which genre the model will be trained with the `-g` or `--genre` argument. The available genres are:
+
+- `classical`: Classical songs
+- `folk`: Folk songs
+- `pop_rock`: Classical Pop and Rock songs
+- `soul_reggae`: Soul and Reggae Songs 
 
 You can also use the `-nf` or `--n_files` argument followed by an integer to specify the number of files to use for training (the default value of -1 means that all available files will be used).
 
@@ -42,11 +56,11 @@ To specify a checkpoint to load the model from, use the `-c` or `--checkpoint` a
 Here are some examples of how to use these arguments:
 
 ```sh
-# Train the LSTM with Local Attention model using all available files, for 100 epochs, on the default device, saving snapshots every 200 epochs, and not using a checkpoint
-python train.py -m lstm_attn
+# Train the LSTM with Local Attention model using all available files of Classical songs, for 100 epochs, on the default device, saving snapshots every 200 epochs, and not using a checkpoint
+python train.py -m lstm_attn -g classical
 
-# Train the LSTM with Local Attention model using 10 files, for 1000 epochs, on the CPU, saving snapshots every 100 epochs, and starting from the checkpoint
-python train.py -m lstm_attn -nf 10 -n 1000 -d cpu -s 100 -c ./.project_data/snapshots/my_checkpoint.pth
+# Train the LSTM with Local Attention model using 10 files of Folk songs, for 1000 epochs, on the CPU, saving snapshots every 100 epochs, and starting from the checkpoint
+python train.py -m lstm_attn -g folk -nf 10 -n 1000 -d cpu -s 100 -c ./.project_data/snapshots/my_checkpoint.pth
 
 # Train the Transformer RPR model using all available files, for 500 epochs, on the default device, saving snapshots every 50 epochs, and not using a checkpoint
 python train.py -m transformer -n 500 -s 50
