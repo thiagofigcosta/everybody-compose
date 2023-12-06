@@ -3,6 +3,8 @@ import zipfile
 
 import numpy as np
 
+MIDI_DATASET_PATH='generated_data'
+
 
 def extract_midi_files(genre: str):
     """Get an iterator over all MIDI files bytestreams.
@@ -12,7 +14,7 @@ def extract_midi_files(genre: str):
         - `num_files`: The number of MIDI files.
     """
     print(f'Extracting {genre} midi files...')
-    archive_path = f'generated_data/{genre}.zip'
+    archive_path = f'{MIDI_DATASET_PATH}/{genre}.zip'
     
     # get number of midi files
     total = 0

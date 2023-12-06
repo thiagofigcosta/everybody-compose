@@ -1,6 +1,6 @@
 """
 Project Tree Structure
-.project_data
+project_data
 |   snapshots/
 |   prepared_data/
 |   midi_outputs/
@@ -10,7 +10,7 @@ from pathlib import Path
 
 class DataPaths:
     def __init__(self):
-        self.cache_dir = Path(".project_data")
+        self.cache_dir = Path("project_data")
         self.cache_dir.mkdir(exist_ok=True)
         self.snapshots_dir = self.cache_dir / "snapshots"
         self.snapshots_dir.mkdir(exist_ok=True)

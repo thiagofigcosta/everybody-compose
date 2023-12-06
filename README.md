@@ -13,6 +13,12 @@ git clone https://github.com/tsunrise/everybody-compose.git
 cd everybody-compose
 pip install -r requirements.txt
 ```
+
+Install ffmpeg:
+- Ubuntu: `sudo apt install ffmpeg`
+- Mac: `brew install ffmpeg`
+- Windows: [follow instructions](http://blog.gregzaal.com/how-to-install-ffmpeg-on-windows/)
+
 You may encouter dependency issues during training on `protobuf`. If so, try reinstall `tensorboard` by running:
 ```sh
 pip install --upgrade tensorboard
@@ -22,7 +28,7 @@ And also upgrade `pip` by running:
 
 ```sh
 pip install --upgrade pip
-``````
+```
 
 This issue is due to an conflicting requirements of `note_seq` and `tensorboard`.
 
@@ -38,6 +44,7 @@ The preprocessed dataset will automatically be downloaded before training. To tr
 
 You have to also specify which genre the model will be trained with the `-g` or `--genre` argument. The available genres are:
 
+- `all_midis`: All genres
 - `classical`: Classical songs
 - `folk`: Folk songs
 - `pop_rock`: Classical Pop and Rock songs
@@ -49,7 +56,7 @@ To specify the number of epochs to train the model for, use the `-n` or `--n_epo
 
 To specify the device to use for training, use the `-d` or `--device` argument followed by a string. The default value is cuda if a CUDA-enabled GPU is available, or cpu if not.
 
-To specify the frequency at which to save snapshots of the trained model, use the `-s` or `--snapshots_freq` argument followed by an integer. This specifies the number of epochs between each saved snapshot. The default value is 200. The snapshots will be saved in the `.project_data/snapshots` directory. The default value is 200.
+To specify the frequency at which to save snapshots of the trained model, use the `-s` or `--snapshots_freq` argument followed by an integer. This specifies the number of epochs between each saved snapshot. The default value is 200. The snapshots will be saved in the `project_data/snapshots` directory. The default value is 200.
 
 To specify a checkpoint to load the model from, use the `-c` or `--checkpoint` argument followed by a string specifying the path to the checkpoint file. The default value is None, which means that no checkpoint will be loaded.
 
@@ -60,7 +67,7 @@ Here are some examples of how to use these arguments:
 python train.py -m lstm_attn -g classical
 
 # Train the LSTM with Local Attention model using 10 files of Folk songs, for 1000 epochs, on the CPU, saving snapshots every 100 epochs, and starting from the checkpoint
-python train.py -m lstm_attn -g folk -nf 10 -n 1000 -d cpu -s 100 -c ./.project_data/snapshots/my_checkpoint.pth
+python train.py -m lstm_attn -g folk -nf 10 -n 1000 -d cpu -s 100 -c ./project_data/snapshots/my_checkpoint.pth
 
 # Train the Transformer RPR model using all available files, for 500 epochs, on the default device, saving snapshots every 50 epochs, and not using a checkpoint
 python train.py -m transformer -n 500 -s 50
@@ -92,6 +99,16 @@ To specify the profile to use for generating the predicted sequence, use the `-t
 Here are some examples of how to use these arguments:
 
 ```sh
-# Generate a predicted sequence using the best performin LSTM with Local Attention model of classical songs, from beats by the user using the keyboard, using the checkpoint at ./.project_data/snapshots/my_checkpoint.pth, on the default device, and using the beta profile with default settings
-python predict_stream.py -m lstm_attn -c ./.project_data/snapshots/lstm_attn_all_classical_best.pth -t beta
+# Generate a predicted sequence using the best performin LSTM with Local Attention model of classical songs, from beats by the user using the keyboard, using the checkpoint at ./project_data/snapshots/my_checkpoint.pth, on the default device, and using the beta profile with default settings
+python predict_stream.py -m lstm_attn -c ./project_data/snapshots/lstm_attn_all_classical_best.pth -t beta
+```
+
+# Running AiCaThi experiments:
+
+1. train models with `genre` classical
+```shell
+python3 train.py -m lstm_attn -g classical
+python3 train.py -m vanilla_rnn -g classical
+python3 train.py -m attention_rnn -g classical
+python3 train.py -m transformer -g classical
 ```

@@ -1,5 +1,6 @@
 dl/
 .project_data/
+project_data/
 .python-version
 
 # Byte-compiled / optimized / DLL files

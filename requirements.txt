@@ -10,3 +10,5 @@ pynput
 tensorboard
 note_seq==0.0.5
 protobuf==4.21.2
+ffmpeg-downloader
+ffmpeg

@@ -12,6 +12,7 @@ if __name__ == '__main__':
     parser.add_argument('-d','--device', type=str,  default='cuda' if torch.cuda.is_available() else 'cpu')
     parser.add_argument('-s','--snapshots_freq', type=int, default=200)
     parser.add_argument('-c','--checkpoint', type=str, default=None)
+    parser.add_argument('--test_only', action='store_true', default=False)
     args = parser.parse_args()
 
     main_args = parser.parse_args()

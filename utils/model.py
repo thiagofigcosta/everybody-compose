@@ -69,7 +69,7 @@ def load_checkpoint(checkpoint_path, model, device):
     return n_epochs
 
 
-def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-1, snapshots_freq:int=10, checkpoint: Optional[str] = None):
+def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-1, snapshots_freq:int=10, checkpoint: Optional[str] = None, test_only: bool = False):
     config = toml.load(CONFIG_PATH)
 
     global_config = config["global"]
@@ -88,14 +88,19 @@ def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-
     print(f"Training data: {len(training_data)}")
     print(f"Validation data: {len(val_data)}")
 
-    train_loader = torch.utils.data.DataLoader(training_data, batch_size=model_config["batch_size"], shuffle=True)
-    val_loader = torch.utils.data.DataLoader(val_data, batch_size=model_config["batch_size"], shuffle=False)
-
     # checkpoint
     if checkpoint is not None:
         epochs_start = load_checkpoint(checkpoint, model, device)
     else:
         epochs_start = 0
+
+    if test_only:
+        epochs_start = 0
+        n_epochs = 1
+    else:
+        train_loader = torch.utils.data.DataLoader(training_data, batch_size=model_config["batch_size"], shuffle=True)
+    val_loader = torch.utils.data.DataLoader(val_data, batch_size=model_config["batch_size"], shuffle=False)
+
 
     optimizer = torch.optim.Adam(model.parameters(), lr=model_config["lr"])
     # TODO: we can use a learning rate scheduler here
@@ -106,23 +111,25 @@ def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-
     writer.add_text("config", toml.dumps(model_config))
     
     best_val_loss = float("inf")
+    best_val_accuracy = float("-inf")
     metrics_train = Metrics("train")
     metrics_val = Metrics("validation")
 
     for epoch in range(epochs_start, n_epochs):
-        model.train()
-        for batch in train_loader:
-            optimizer.zero_grad()
-            input_seq = batch["beats"].to(device)
-            target_seq = batch["notes"].long().to(device)
-            target_prev_seq = batch["notes_shifted"].long().to(device)
-            output = model_forward(model_name, model, input_seq, target_seq, target_prev_seq, device)
-            loss = model.loss_function(output, target_seq)
-            loss.backward()
-            if "clip_grad" in model_config:
-                model.clip_gradients_(model_config["clip_grad"])  # type: ignore
-            optimizer.step()
-            metrics_train.update(len(batch), loss.item(), output, target_seq)
+        if not test_only:
+            model.train()
+            for batch in train_loader:
+                optimizer.zero_grad()
+                input_seq = batch["beats"].to(device)
+                target_seq = batch["notes"].long().to(device)
+                target_prev_seq = batch["notes_shifted"].long().to(device)
+                output = model_forward(model_name, model, input_seq, target_seq, target_prev_seq, device)
+                loss = model.loss_function(output, target_seq)
+                loss.backward()
+                if "clip_grad" in model_config:
+                    model.clip_gradients_(model_config["clip_grad"])  # type: ignore
+                optimizer.step()
+                metrics_train.update(len(batch), loss.item(), output, target_seq)
         
         model.eval()
         for batch in val_loader:
@@ -134,21 +141,32 @@ def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-
                 loss = model.loss_function(output, target_seq)
             metrics_val.update(len(batch), loss.item(), output, target_seq)
 
-        training_metrics = metrics_train.flush_and_reset(writer, epoch)
+        if not test_only:
+            training_metrics = metrics_train.flush_and_reset(writer, epoch)
         validation_metrics = metrics_val.flush_and_reset(writer, epoch)
         
-        print('Epoch: {}/{}.............'.format(epoch, n_epochs), end=' ')
-        print("Train Loss: {:.4f}, Val Loss: {:.4f}, Train Acc: {:.4f}, Val Acc: {:.4f}".format(training_metrics["loss"], validation_metrics["loss"], training_metrics["accuracy"], validation_metrics["accuracy"]))
+        print('Epoch: {}/{}.............'.format(epoch+1, n_epochs), end=' ')
+        if not test_only:
+            print("Train Loss: {:.4f}, Val Loss: {:.4f}, Train Acc: {:.4f}, Val Acc: {:.4f}".format(training_metrics["loss"], validation_metrics["loss"], training_metrics["accuracy"], validation_metrics["accuracy"]))
+        else:
+            print("Val Loss: {:.4f}, Val Acc: {:.4f}".format(validation_metrics["loss"], validation_metrics["accuracy"]))
+
 
         # save checkpoint with lowest validation loss
-        if validation_metrics["loss"] < best_val_loss:
-            best_val_loss = validation_metrics["loss"]
-            save_checkpoint(model, paths, model_name, n_files, "best", genre)
-            print("Minimum Validation Loss of {:.4f} at epoch {}/{}".format(best_val_loss, epoch, n_epochs))
-            
-        # save snapshots
-        if (epoch + 1) % snapshots_freq == 0:
-            save_checkpoint(model, paths, model_name, n_files, epoch + 1, genre)
+        if not test_only:
+            if validation_metrics["loss"] < best_val_loss:
+                best_val_loss = validation_metrics["loss"]
+                save_checkpoint(model, paths, model_name, n_files, "best", genre)
+                print("Minimum Validation Loss of {:.4f} at epoch {}/{}".format(best_val_loss, epoch+1, n_epochs))
+                
+            if validation_metrics["accuracy"] > best_val_accuracy:
+                best_val_accuracy = validation_metrics["accuracy"]
+                print("Maximum Validation Accuracy of {:.4f} at epoch {}/{}".format(best_val_accuracy, epoch+1, n_epochs))
+
+            # save snapshots
+            if (epoch + 1) % snapshots_freq == 0:
+                save_checkpoint(model, paths, model_name, n_files, epoch + 1, genre)
     writer.close()
-    save_checkpoint(model, paths, model_name, n_files, n_epochs, genre)
+    if not test_only:
+        save_checkpoint(model, paths, model_name, n_files, n_epochs, genre)
     return model

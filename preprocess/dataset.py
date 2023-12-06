@@ -1,5 +1,5 @@
 from torch.utils.data import Dataset
-from preprocess.prepare import extract_midi_files, parse_melody_to_beats_notes, parse_midi_to_melody
+from preprocess.prepare import extract_midi_files, parse_melody_to_beats_notes, parse_midi_to_melody, MIDI_DATASET_PATH
 
 import numpy as np
 import toml
@@ -12,6 +12,7 @@ from utils.data_paths import DataPaths
 from dataclasses import dataclass
 
 PREPROCESS_SAVE_FREQ = 32
+MIDI_METADATA_DATASET_PATH = 'sampled_genre_metadata.csv'
 
 @dataclass
 class MetaData:
@@ -53,7 +54,7 @@ class BeatsRhythmsDataset(Dataset):
         ## Preprocessing
         # # TODO add config args
         midi_files, num_files = extract_midi_files(genre)
-        metadata_path = "generated_data/sampled_genre_metadata.csv"
+        metadata_path = f"{MIDI_DATASET_PATH}/{MIDI_METADATA_DATASET_PATH}"
 
         metadata = {}
         with open(metadata_path, "r", encoding="utf-8") as f:
