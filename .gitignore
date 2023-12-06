@@ -1,5 +1,6 @@
-# CS230 Specific
+dl/
 .project_data/
+.python-version
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -168,3 +169,5 @@ cython_debug/
 # experiments
 test.ipynb
 *.npy
+.DS_Store
+dl/bin/activate
