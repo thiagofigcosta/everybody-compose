@@ -181,18 +181,19 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
 
 
         if not test_only:
-            if trainingD_metrics["accuracy"] > best_val_Dloss:
+            if trainingD_metrics["loss"] < best_val_Dloss:
                 best_val_Dloss = trainingD_metrics["accuracy"]
                 print("Minimum Validation D Loss of {:.4f} at epoch {}/{}".format(best_val_Dloss, epoch+1, n_epochs))
-            if trainingG_metrics["accuracy"] > best_val_Gloss:
+            if trainingG_metrics["loss"] < best_val_Gloss:
                 best_val_Gloss = trainingG_metrics["accuracy"]
                 print("Minimum Validation G Loss of {:.4f} at epoch {}/{}".format(best_val_Gloss, epoch+1, n_epochs))
+                save_checkpoint(netG, paths, generator_full_name, n_files, "best", genre)
+                save_checkpoint(netD, paths, discriminator_full_name, n_files, "best", genre)
 
             if validation_metrics["accuracy"] > best_val_accuracy:
                 best_val_accuracy = validation_metrics["accuracy"]
                 print("Maximum Validation Accuracy of {:.4f} at epoch {}/{}".format(best_val_accuracy, epoch+1, n_epochs))
-                save_checkpoint(netG, paths, generator_full_name, n_files, "best", genre)
-                save_checkpoint(netD, paths, discriminator_full_name, n_files, "best", genre)
+
 
             # save snapshots
             if (epoch + 1) % snapshots_freq == 0:
