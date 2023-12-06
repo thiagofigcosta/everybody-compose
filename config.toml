@@ -1,5 +1,5 @@
 [global]
-dataset = "mastero"
+dataset = "lakh"
 random_slice_seed = 123
 val_ratio = 0.1
 train_val_split_seed = 666
