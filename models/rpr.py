@@ -36,7 +36,7 @@ class TransformerEncoderRPR(Module):
         self.num_layers = num_layers
         self.norm = norm
 
-    def forward(self, src, mask=None, src_key_padding_mask=None):
+    def forward(self, src, mask=None, src_key_padding_mask=None, is_causal=False):
 
         output = src
 
@@ -68,7 +68,7 @@ class TransformerDecoderRPR(Module):
         self.num_layers = num_layers
         self.norm = norm
 
-    def forward(self, tgt, memory, tgt_mask=None, memory_mask=None, tgt_key_padding_mask=None, memory_key_padding_mask=None):
+    def forward(self, tgt, memory, tgt_mask=None, memory_mask=None, tgt_key_padding_mask=None, memory_key_padding_mask=None,tgt_is_causal=False,memory_is_causal=False):
 
         output = tgt
 

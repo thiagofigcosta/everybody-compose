@@ -58,8 +58,8 @@ def model_forward(model_name, model, input_seq: torch.Tensor, target_seq: torch.
 def model_file_name(model_name, n_files, n_epochs, genre):
     return "{}_{}_{}_{}.pth".format(model_name, "all" if n_files == -1 else n_files, genre, n_epochs)
 
-def save_checkpoint(model, paths, model_name, n_files, n_epochs, genre):
-    model_file = model_file_name(model_name, n_files, n_epochs, genre)
+def save_checkpoint(model, paths, model_name, n_files, n_epochs, genre, finetuning=False):
+    model_file = model_file_name(model_name if not finetuning else f'{model_name}_tunned', n_files, n_epochs, genre)
     model_path = paths.snapshots_dir / model_file
     torch.save({
         'model': model.state_dict(),
@@ -97,6 +97,7 @@ def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-
     # checkpoint
     if checkpoint is not None:
         epochs_start = load_checkpoint(checkpoint, model, device)
+        epochs_start = 0
     else:
         epochs_start = 0
 
@@ -116,11 +117,13 @@ def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-
     writer = SummaryWriter(log_dir = log_dir, flush_secs= 60)
     writer.add_text("config", toml.dumps(model_config))
     
-    best_epoch = -1
+    best_epoch = None
     best_val_loss = float("inf")
     best_val_accuracy = float("-inf")
     metrics_train = Metrics("train")
     metrics_val = Metrics("validation")
+
+    finetuning = checkpoint is not None and not test_only
 
     for epoch in range(epochs_start, n_epochs):
         if not test_only:
@@ -160,22 +163,23 @@ def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-
 
 
         # save checkpoint with lowest validation loss
-        if not test_only:
-            if validation_metrics["loss"] < best_val_loss:
-                best_val_loss = validation_metrics["loss"]
-                save_checkpoint(model, paths, model_name, n_files, "best", genre)
+        if validation_metrics["loss"] < best_val_loss:
+            best_val_loss = validation_metrics["loss"]
+            if not test_only:
                 best_epoch = epoch+1
-                print("Minimum Validation Loss of {:.4f} at epoch {}/{}".format(best_val_loss, epoch+1, n_epochs))
-                
-            if validation_metrics["accuracy"] > best_val_accuracy:
-                best_val_accuracy = validation_metrics["accuracy"]
-                print("Maximum Validation Accuracy of {:.4f} at epoch {}/{}".format(best_val_accuracy, epoch+1, n_epochs))
+                save_checkpoint(model, paths, model_name, n_files, "best", genre, finetuning)
+            print("Minimum Validation Loss of {:.4f} at epoch {}/{}".format(best_val_loss, epoch+1, n_epochs))
+            
+        if validation_metrics["accuracy"] > best_val_accuracy:
+            best_val_accuracy = validation_metrics["accuracy"]
+            print("Maximum Validation Accuracy of {:.4f} at epoch {}/{}".format(best_val_accuracy, epoch+1, n_epochs))
 
+        if not test_only:
             # save snapshots
             if (epoch + 1) % snapshots_freq == 0:
-                save_checkpoint(model, paths, model_name, n_files, epoch + 1, genre)
+                save_checkpoint(model, paths, model_name, n_files, epoch + 1, genre, finetuning)
     writer.close()
     print("Best epoch: {}, Best Val Accuracy of {:.4f}, Best Val Loss of {:.4f}".format(best_epoch, best_val_accuracy, best_val_loss))
     if not test_only:
-        save_checkpoint(model, paths, model_name, n_files, n_epochs, genre)
+        save_checkpoint(model, paths, model_name, n_files, n_epochs, genre, finetuning)
     return model

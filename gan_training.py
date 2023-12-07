@@ -56,9 +56,9 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
     print(f"Training data: {len(training_data)}")
 
     if generator_checkpoint is not None:
-        load_checkpoint(generator_checkpoint, netG, device, genre)
+        load_checkpoint(generator_checkpoint, netG, device)
     if discriminator_checkpoint is not None:
-        load_checkpoint(discriminator_checkpoint, netD, device, genre)
+        load_checkpoint(discriminator_checkpoint, netD, device)
 
     if test_only:
         epochs_start = 0
@@ -80,10 +80,13 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
     metricsD_train = Metrics("train_D")
     metrics_val = Metrics("validation")
 
-    best_epoch = -1
+    best_epoch = None
     best_val_Gloss = float("inf")
     best_val_Dloss = float("inf")
     best_val_accuracy = float("-inf")
+   
+    finetuning = generator_checkpoint is not None and discriminator_checkpoint is not None and not test_only
+   
     # training loop
     for epoch in range(n_epochs):
         if not test_only:
@@ -177,7 +180,7 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
             print('Loss_D: %.4f\tLoss_G: %.4f\tLoss_D_Val: %.4f\tAcc_G_Val: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f'
                 % (trainingD_metrics["loss"], trainingG_metrics["loss"], validation_metrics["loss"], validation_metrics["accuracy"], D_x, D_G_z1, D_G_z2))
         else:
-            print('Loss_D_Val: %.4f\tAcc_G_Val: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f'
+            print('Loss_D_Val: %.4f\tAcc_G_Val: %.4f'
                 % (validation_metrics["loss"], validation_metrics["accuracy"]))
 
 
@@ -189,26 +192,28 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
             if trainingG_metrics["loss"] < best_val_Gloss:
                 best_val_Gloss = trainingG_metrics["accuracy"]
                 print("Minimum Validation G Loss of {:.4f} at epoch {}/{}".format(best_val_Gloss, epoch+1, n_epochs))
-                best_epoch = epoch+1
-                save_checkpoint(netG, paths, generator_full_name, n_files, "best", genre)
-                save_checkpoint(netD, paths, discriminator_full_name, n_files, "best", genre)
+                if not test_only:
+                    best_epoch = epoch+1
+                    save_checkpoint(netG, paths, generator_full_name, n_files, "best", genre, finetuning)
+                    save_checkpoint(netD, paths, discriminator_full_name, n_files, "best", genre, finetuning)
 
-            if validation_metrics["accuracy"] > best_val_accuracy:
-                best_val_accuracy = validation_metrics["accuracy"]
-                print("Maximum Validation Accuracy of {:.4f} at epoch {}/{}".format(best_val_accuracy, epoch+1, n_epochs))
+        if validation_metrics["accuracy"] > best_val_accuracy:
+            best_val_accuracy = validation_metrics["accuracy"]
+            print("Maximum Validation Accuracy of {:.4f} at epoch {}/{}".format(best_val_accuracy, epoch+1, n_epochs))
 
 
+        if not test_only:
             # save snapshots
             if (epoch + 1) % snapshots_freq == 0:
-                save_checkpoint(netG, paths, generator_full_name, n_files, epoch + 1, genre)
-                save_checkpoint(netD, paths, discriminator_full_name, n_files, epoch + 1, genre)
+                save_checkpoint(netG, paths, generator_full_name, n_files, epoch + 1, genre, finetuning)
+                save_checkpoint(netD, paths, discriminator_full_name, n_files, epoch + 1, genre, finetuning)
 
     writer.close()
     print("Best epoch: {}, Best Val Accuracy of {:.4f}, Best G Val Loss of {:.4f}, Best D Val Loss of {:.4f}".format(best_epoch, best_val_accuracy, best_val_Gloss, best_val_Dloss))
     if not test_only:
         # save model
-        save_checkpoint(netG, paths, generator_full_name, n_files, epoch + 1, genre)
-        save_checkpoint(netD, paths, discriminator_full_name, n_files, epoch + 1, genre)
+        save_checkpoint(netG, paths, generator_full_name, n_files, epoch + 1, genre, finetuning)
+        save_checkpoint(netD, paths, discriminator_full_name, n_files, epoch + 1, genre, finetuning)
     return netG, netD
 
 
