@@ -22,6 +22,8 @@ CONFIG_PATH = "./config.toml"
 def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: int, device: str, n_files:int=-1, snapshots_freq:int=10, generator_checkpoint: Optional[str] = None, discriminator_checkpoint: Optional[str] = None, test_only: bool = False):
     # check cuda status
     print(f"Using {device} device")
+    if device == 'cuda':
+        torch.cuda.empty_cache()
 
     # initialize model
     config = toml.load(CONFIG_PATH)

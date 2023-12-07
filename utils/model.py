@@ -76,6 +76,9 @@ def load_checkpoint(checkpoint_path, model, device):
 
 
 def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-1, snapshots_freq:int=10, checkpoint: Optional[str] = None, test_only: bool = False):
+    if device == 'cuda':
+        torch.cuda.empty_cache()
+
     config = toml.load(CONFIG_PATH)
 
     global_config = config["global"]

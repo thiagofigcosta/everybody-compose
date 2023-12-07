@@ -78,7 +78,7 @@ class BeatsRhythmsDataset(Dataset):
         bar = tqdm(total=num_files, desc = "Processing MIDI files")
         warnings_cnt, errors_cnt, saved = 0, 0, 0
         for filename, io in midi_files:
-            filename = filename[len(genre)+1:]
+            filename = os.path.basename(filename)
             if skip > 0:
                 skip -= 1
                 bar.update(1)
@@ -103,7 +103,7 @@ class BeatsRhythmsDataset(Dataset):
             if beats is not None and notes is not None:
                 self.beats_list.append(beats)
                 self.notes_list.append(notes) 
-                self.metadata_list.append(metadata[os.path.basename(filename)])
+                self.metadata_list.append(metadata[filename])
                 self.name_to_idx[filename] = len(self.metadata_list) - 1
             bar.update(1)
             if len(self.metadata_list) % PREPROCESS_SAVE_FREQ == 0:
