@@ -192,30 +192,73 @@ python3 gan_training.py  -gm gan_gen -dm gan_disc  -g soul_reggae -gc aicathi_mo
 ```
 
 
-5. Fine tunning and evaluate
+5. Fine tunning and evaluate:
+Train base model:
+```shell
+python3 train.py -m lstm_attn -g midis_except_classical -n 100
+python3 train.py -m lstm_attn -g midis_except_folk -n 100
+python3 train.py -m lstm_attn -g midis_except_pop_rock -n 100
+python3 train.py -m lstm_attn -g midis_except_soul_reggae -n 100
+
+python3 train.py -m vanilla_rnn -g midis_except_classical -n 200
+python3 train.py -m vanilla_rnn -g midis_except_folk -n 200
+python3 train.py -m vanilla_rnn -g midis_except_pop_rock -n 200
+python3 train.py -m vanilla_rnn -g midis_except_soul_reggae -n 200
+
+python3 train.py -m attention_rnn -g midis_except_classical -n 150
+python3 train.py -m attention_rnn -g midis_except_folk -n 150
+python3 train.py -m attention_rnn -g midis_except_pop_rock -n 150
+python3 train.py -m attention_rnn -g midis_except_soul_reggae -n 150
+
+python3 train.py -m transformer -g midis_except_classical -n 200
+python3 train.py -m transformer -g midis_except_folk -n 200
+python3 train.py -m transformer -g midis_except_pop_rock -n 200
+python3 train.py -m transformer -g midis_except_soul_reggae -n 200
+```
+
+Evaluate base model:
+```shell
+python3 train.py -m lstm_attn -g classical -c aicathi_models/lstm_attn_all_midis_except_classical_best.pth --test_only
+python3 train.py -m lstm_attn -g folk -c aicathi_models/lstm_attn_all_midis_except_folk_best.pth --test_only
+python3 train.py -m lstm_attn -g pop_rock -c aicathi_models/lstm_attn_all_midis_except_pop_rock_best.pth --test_only
+python3 train.py -m lstm_attn -g classical -c aicathi_models/lstm_attn_all_midis_except_soul_reggae_best.pth --test_only
+
+python3 train.py -m vanilla_rnn -g classical -c aicathi_models/vanilla_rnn_all_midis_except_classical_best.pth --test_only
+python3 train.py -m vanilla_rnn -g folk -c aicathi_models/vanilla_rnn_all_midis_except_folk_best.pth --test_only
+python3 train.py -m vanilla_rnn -g pop_rock -c aicathi_models/vanilla_rnn_all_midis_except_pop_rock_best.pth --test_only
+python3 train.py -m vanilla_rnn -g soul_reggae -c aicathi_models/vanilla_rnn_all_midis_except_soul_reggae_best.pth --test_only
+
+python3 train.py -m attention_rnn -g classical -c aicathi_models/attention_rnn_all_midis_except_classical_best.pth --test_only
+python3 train.py -m attention_rnn -g folk -c aicathi_models/attention_rnn_all_midis_except_folk_best.pth --test_only
+python3 train.py -m attention_rnn -g pop_rock -c aicathi_models/attention_rnn_all_midis_except_pop_rock_best.pth --test_only
+python3 train.py -m attention_rnn -g soul_reggae -c aicathi_models/attention_rnn_all_midis_except_soul_reggae_best.pth --test_only
+
+python3 train.py -m transformer -g classical -c aicathi_models/transformer_all_midis_except_classical_best.pth --test_only
+python3 train.py -m transformer -g folk -c aicathi_models/transformer_all_midis_except_folk_best.pth --test_only
+python3 train.py -m transformer -g pop_rock -c aicathi_models/transformer_all_midis_except_pop_rock_best.pth --test_only
+python3 train.py -m transformer -g soul_reggae -c aicathi_models/transformer_all_midis_except_soul_reggae_best.pth --test_only
+
+```
+
+Do the fine tunning and retrieve results
 ```bash
-python3 train.py -m lstm_attn -g classical -n 100 -c aicathi_models/lstm_attn_all_all_midis_best.pth 
-python3 train.py -m lstm_attn -g folk -n 100 -c aicathi_models/lstm_attn_all_all_midis_best.pth 
-python3 train.py -m lstm_attn -g pop_rock -n 100 -c aicathi_models/lstm_attn_all_all_midis_best.pth 
-python3 train.py -m lstm_attn -g soul_reggae -n 100 -c aicathi_models/lstm_attn_all_all_midis_best.pth 
+python3 train.py -m lstm_attn -g classical -n 50 -c aicathi_models/lstm_attn_all_midis_except_classical_best.pth 
+python3 train.py -m lstm_attn -g folk -n 50 -c aicathi_models/lstm_attn_all_midis_except_folk_best.pth 
+python3 train.py -m lstm_attn -g pop_rock -n 50 -c aicathi_models/lstm_attn_all_midis_except_pop_rock_best.pth 
+python3 train.py -m lstm_attn -g soul_reggae -n 50 -c aicathi_models/lstm_attn_all_midis_except_soul_reggae_best.pth 
 
-python3 train.py -m vanilla_rnn -g classical -n 200 -c aicathi_models/vanilla_rnn_all_all_midis_best.pth
-python3 train.py -m vanilla_rnn -g folk -n 200 -c aicathi_models/vanilla_rnn_all_all_midis_best.pth
-python3 train.py -m vanilla_rnn -g pop_rock -n 200 -c aicathi_models/vanilla_rnn_all_all_midis_best.pth
-python3 train.py -m vanilla_rnn -g soul_reggae -n 200 -c aicathi_models/vanilla_rnn_all_all_midis_best.pth
+python3 train.py -m vanilla_rnn -g classical -n 100 -c aicathi_models/vanilla_rnn_all_midis_except_classical_best.pth
+python3 train.py -m vanilla_rnn -g folk -n 100 -c aicathi_models/vanilla_rnn_all_midis_except_folk_best.pth
+python3 train.py -m vanilla_rnn -g pop_rock -n 100 -c aicathi_models/vanilla_rnn_all_midis_except_pop_rock_best.pth
+python3 train.py -m vanilla_rnn -g soul_reggae -n 100 -c aicathi_models/vanilla_rnn_all_midis_except_soul_reggae_best.pth
 
-python3 train.py -m attention_rnn -g classical -n 150 -c aicathi_models/attention_rnn_all_all_midis_best.pth
-python3 train.py -m attention_rnn -g folk -n 150 -c aicathi_models/attention_rnn_all_all_midis_best.pth
-python3 train.py -m attention_rnn -g pop_rock -n 150 -c aicathi_models/attention_rnn_all_all_midis_best.pth
-python3 train.py -m attention_rnn -g soul_reggae -n 150 -c aicathi_models/attention_rnn_all_all_midis_best.pth
+python3 train.py -m attention_rnn -g classical -n 75 -c aicathi_models/attention_rnn_all_midis_except_classical_best.pth
+python3 train.py -m attention_rnn -g folk -n 75 -c aicathi_models/attention_rnn_all_midis_except_folk_best.pth
+python3 train.py -m attention_rnn -g pop_rock -n 75 -c aicathi_models/attention_rnn_all_midis_except_pop_rock_best.pth
+python3 train.py -m attention_rnn -g soul_reggae -n 75 -c aicathi_models/attention_rnn_all_midis_except_soul_reggae_best.pth
 
-python3 train.py -m transformer -g classical -n 200 -c aicathi_models/transformer_all_all_midis_best.pth
-python3 train.py -m transformer -g folk -n 200 -c aicathi_models/transformer_all_all_midis_best.pth
-python3 train.py -m transformer -g pop_rock -n 200 -c aicathi_models/transformer_all_all_midis_best.pth
-python3 train.py -m transformer -g soul_reggae -n 200 -c aicathi_models/transformer_all_all_midis_best.pth
-
-python3 gan_training.py  -gm gan_gen -dm gan_disc -g classical -n 400 -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth
-python3 gan_training.py  -gm gan_gen -dm gan_disc -g folk -n 400 -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth
-python3 gan_training.py  -gm gan_gen -dm gan_disc -g pop_rock -n 400 -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth
-python3 gan_training.py  -gm gan_gen -dm gan_disc -g soul_reggae -n 400 -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth
+python3 train.py -m transformer -g classical -n 100 -c aicathi_models/transformer_all_midis_except_classical_best.pth
+python3 train.py -m transformer -g folk -n 100 -c aicathi_models/transformer_all_midis_except_folk_best.pth
+python3 train.py -m transformer -g pop_rock -n 100 -c aicathi_models/transformer_all_midis_except_pop_rock_best.pth
+python3 train.py -m transformer -g soul_reggae -n 100 -c aicathi_models/transformer_all_midis_except_soul_reggae_best.pth
 ```
