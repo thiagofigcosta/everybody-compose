@@ -46,7 +46,7 @@ encode_hidden_dim = 512
 decode_hidden_dim = 1024
 clip_grad = 5.0
 
-[model.cnn]
+[model.cnn_disc]
 lr = 1e-3
 embed_dim = 32
 

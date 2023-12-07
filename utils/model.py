@@ -1,7 +1,7 @@
 from typing import Optional
 import numpy as np
 import torch
-from models import transformer, vanilla_rnn, attention_rnn
+from models import transformer, vanilla_rnn, attention_rnn, cnn_discriminator
 import toml
 from preprocess.dataset import BeatsRhythmsDataset
 import torch.utils.data
@@ -31,6 +31,8 @@ def get_model(name, config, device):
             tgt_vocab_size=config["n_notes"],
             dim_feedforward=config["hidden_dim"]
         ).to(device)
+    elif name == "cnn_disc":
+        return cnn_discriminator.CNNDiscriminator(config["g_n_notes"], config["g_seq_len"], config["embed_dim"]).to(device)
     else:
         raise ValueError("Invalid model name")
 

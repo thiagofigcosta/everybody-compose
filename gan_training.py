@@ -8,7 +8,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.data
 from torch.utils.tensorboard.writer import SummaryWriter
-from models.cnn_discriminator import CNNDiscriminator
 
 from preprocess.dataset import BeatsRhythmsDataset
 from utils.data_paths import DataPaths
@@ -31,7 +30,8 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
     netG = get_model(generator_name, netG_config, device)
     print(netG)
     netD_config = config["model"][discriminator_name]
-    netD = CNNDiscriminator(netG_config["n_notes"], netG_config["seq_len"], netD_config["embed_dim"]).to(device)
+    discriminator_config = {**dict(g_n_notes=netG_config["n_notes"], g_seq_len=netG_config["seq_len"]), **netD_config} 
+    netD = get_model(discriminator_name, discriminator_config, device)
     print(netD)
     generator_full_name = f'gan-G-{generator_name}'
     discriminator_full_name = f'gan-D-{discriminator_name}'
@@ -42,8 +42,8 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
     criterion = nn.BCELoss()
 
     # define optimizer
-    optimizerD = torch.optim.Adam(netD.parameters(), lr=netG_config["lr"])
-    optimizerG = torch.optim.Adam(netG.parameters(), lr=netD_config["lr"])
+    optimizerD = torch.optim.Adam(netD.parameters(), lr=netD_config["lr"])
+    optimizerG = torch.optim.Adam(netG.parameters(), lr=netG_config["lr"])
 
     # prepare training/validation loader
     dataset = BeatsRhythmsDataset(netG_config["seq_len"], global_config["random_slice_seed"])
@@ -211,7 +211,7 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Train DeepBeats GAN')
     parser.add_argument('-gm', '--generator_name', type=str, default = "vanilla_rnn")
-    parser.add_argument('-dm', '--discriminator_name', type=str, default = "cnn")
+    parser.add_argument('-dm', '--discriminator_name', type=str, default = "cnn_disc")
     parser.add_argument('-g', '--genre', type=str, default='classical')
     parser.add_argument('-nf', '--n_files', type=int, default=-1)
     parser.add_argument('-n', '--n_epochs', type=int, default=100)
