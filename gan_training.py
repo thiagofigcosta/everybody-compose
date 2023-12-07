@@ -80,6 +80,7 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
     metricsD_train = Metrics("train_D")
     metrics_val = Metrics("validation")
 
+    best_epoch = -1
     best_val_Gloss = float("inf")
     best_val_Dloss = float("inf")
     best_val_accuracy = float("-inf")
@@ -184,9 +185,11 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
             if trainingD_metrics["loss"] < best_val_Dloss:
                 best_val_Dloss = trainingD_metrics["accuracy"]
                 print("Minimum Validation D Loss of {:.4f} at epoch {}/{}".format(best_val_Dloss, epoch+1, n_epochs))
+            
             if trainingG_metrics["loss"] < best_val_Gloss:
                 best_val_Gloss = trainingG_metrics["accuracy"]
                 print("Minimum Validation G Loss of {:.4f} at epoch {}/{}".format(best_val_Gloss, epoch+1, n_epochs))
+                best_epoch = epoch+1
                 save_checkpoint(netG, paths, generator_full_name, n_files, "best", genre)
                 save_checkpoint(netD, paths, discriminator_full_name, n_files, "best", genre)
 
@@ -201,6 +204,7 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
                 save_checkpoint(netD, paths, discriminator_full_name, n_files, epoch + 1, genre)
 
     writer.close()
+    print("Best epoch: {}, Best Val Accuracy of {:.4f}, Best G Val Loss of {:.4f}, Best D Val Loss of {:.4f}".format(best_epoch, best_val_accuracy, best_val_Gloss, best_val_Dloss))
     if not test_only:
         # save model
         save_checkpoint(netG, paths, generator_full_name, n_files, epoch + 1, genre)

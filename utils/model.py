@@ -1,7 +1,7 @@
 from typing import Optional
 import numpy as np
 import torch
-from models import transformer, vanilla_rnn, attention_rnn, cnn_discriminator
+from models import transformer, vanilla_rnn, attention_rnn, cnn_discriminator, gan
 import toml
 from preprocess.dataset import BeatsRhythmsDataset
 import torch.utils.data
@@ -33,6 +33,10 @@ def get_model(name, config, device):
         ).to(device)
     elif name == "cnn_disc":
         return cnn_discriminator.CNNDiscriminator(config["g_n_notes"], config["g_seq_len"], config["embed_dim"]).to(device)
+    elif name == "gan_disc":
+        return gan.Discriminator(config["g_n_notes"], config["g_seq_len"], config["embed_dim"]).to(device)
+    elif name == "gan_gen":
+        return gan.Generator(config["n_notes"], config["embed_dim"], config["hidden_dim"]).to(device)
     else:
         raise ValueError("Invalid model name")
 
@@ -112,6 +116,7 @@ def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-
     writer = SummaryWriter(log_dir = log_dir, flush_secs= 60)
     writer.add_text("config", toml.dumps(model_config))
     
+    best_epoch = -1
     best_val_loss = float("inf")
     best_val_accuracy = float("-inf")
     metrics_train = Metrics("train")
@@ -159,6 +164,7 @@ def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-
             if validation_metrics["loss"] < best_val_loss:
                 best_val_loss = validation_metrics["loss"]
                 save_checkpoint(model, paths, model_name, n_files, "best", genre)
+                best_epoch = epoch+1
                 print("Minimum Validation Loss of {:.4f} at epoch {}/{}".format(best_val_loss, epoch+1, n_epochs))
                 
             if validation_metrics["accuracy"] > best_val_accuracy:
@@ -169,6 +175,7 @@ def train(model_name: str, genre: str, n_epochs: int, device: str, n_files:int=-
             if (epoch + 1) % snapshots_freq == 0:
                 save_checkpoint(model, paths, model_name, n_files, epoch + 1, genre)
     writer.close()
+    print("Best epoch: {}, Best Val Accuracy of {:.4f}, Best Val Loss of {:.4f}".format(best_epoch, best_val_accuracy, best_val_loss))
     if not test_only:
         save_checkpoint(model, paths, model_name, n_files, n_epochs, genre)
     return model
