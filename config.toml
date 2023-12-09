@@ -75,14 +75,37 @@ beam_prob = 0.5
 temperature = 1
 
 [model.gan_disc]
-lr = 1e-4
-embed_dim = 320
+lr = 1e-3
+embed_dim = 64
+dropout = 0.2
+dense_hidden_sz = 64
 
 [model.gan_gen]
-lr = 2e-4
+lr = 2e-3
+seq_len = 64
+batch_size = 64
+n_notes = 128
+embed_dim = 32
+hidden_dim = 256
+
+[model.gru]
+lr = 1e-3 
 seq_len = 64
 batch_size = 64
 n_notes = 128
 embed_dim = 32
 hidden_dim = 256
 clip_grad = 5.0
+n_layers = 2
+dropout = 0.2
+
+[model.vanilla_lstm]
+lr = 1e-3 
+seq_len = 64
+batch_size = 64
+n_notes = 128
+embed_dim = 32
+hidden_dim = 256
+clip_grad = 5.0
+n_layers = 2
+dropout = 0.2

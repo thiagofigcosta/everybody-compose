@@ -67,7 +67,7 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
         n_epochs = 1
     else:
         train_loader = torch.utils.data.DataLoader(training_data, netG_config["batch_size"], shuffle=True)
-    val_loader = torch.utils.data.DataLoader(val_data, batch_size=netG_config["batch_size"], shuffle=False)
+    val_loader = torch.utils.data.DataLoader(val_data, batch_size = netG_config["batch_size"], shuffle=False)
 
     # define tensorboard writer
     paths = DataPaths()
@@ -145,7 +145,8 @@ def train(generator_name: str, genre: str, discriminator_name: str, n_epochs: in
                 errG.backward()
                 D_G_z2 = output.mean().item()
                 # Update G
-                netG.clip_gradients_(5)
+                if "clip_grad" in netG_config:
+                    netG.clip_gradients_(netG_config["clip_grad"])
                 optimizerG.step()
 
                 metricsD_train.update(len(batch), errD.item(), fake, target_seq)

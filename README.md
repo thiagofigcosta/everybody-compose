@@ -105,6 +105,20 @@ python predict_stream.py -m lstm_attn -c ./project_data/snapshots/lstm_attn_all_
 
 # Running AiCaThi experiments:
 
+## Preparing environment
+
+```shell
+pip3 install virtualenv
+python3 -m virtualenv -p python3 venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# sudo apt install ffmpeg
+# brew install ffmpeg
+```
+
+## Commands to run experiments
+
 1. Train models with `classical` genre
 ```shell
 python3 train.py -m lstm_attn -g classical -n 100
@@ -112,7 +126,7 @@ python3 train.py -m vanilla_rnn -g classical -n 200
 python3 train.py -m attention_rnn -g classical -n 150
 python3 train.py -m transformer -g classical -n 200
 
-python3 gan_training.py  -gm gan_gen -dm gan_disc -g classical -n 400 # WiP
+# python3 gan_training.py  -gm gan_gen -dm gan_disc -g classical -n 400 # WiP
 ```
 
 2. Evaluate metrics for all genres trained with `classical` genre
@@ -142,10 +156,10 @@ python3 train.py -m transformer -g soul_reggae -c aicathi_models/transformer_all
 
 
 
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g classical -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g folk -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g pop_rock -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g soul_reggae -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
+# python3 gan_training.py  -gm gan_gen -dm gan_disc  -g classical -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
+# python3 gan_training.py  -gm gan_gen -dm gan_disc  -g folk -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
+# python3 gan_training.py  -gm gan_gen -dm gan_disc  -g pop_rock -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
+# python3 gan_training.py  -gm gan_gen -dm gan_disc  -g soul_reggae -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
 ```
 
 3. Train models with all genres
@@ -185,10 +199,10 @@ python3 train.py -m transformer -g soul_reggae -c aicathi_models/transformer_all
 
 
 
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g classical -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth --test_only
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g folk -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth --test_only
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g pop_rock -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth --test_only
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g soul_reggae -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth --test_only
+# python3 gan_training.py  -gm gan_gen -dm gan_disc  -g classical -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth --test_only
+# python3 gan_training.py  -gm gan_gen -dm gan_disc  -g folk -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth --test_only
+# python3 gan_training.py  -gm gan_gen -dm gan_disc  -g pop_rock -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth --test_only
+# python3 gan_training.py  -gm gan_gen -dm gan_disc  -g soul_reggae -gc aicathi_models/gan-G-gan_gen_all_all_midis_best.pth  -dc aicathi_models/gan-D-gan_disc_all_all_midis_best.pth --test_only
 ```
 
 

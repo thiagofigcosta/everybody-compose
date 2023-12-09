@@ -1,7 +1,7 @@
 from typing import Optional
 import numpy as np
 import torch
-from models import transformer, vanilla_rnn, attention_rnn, cnn_discriminator, gan
+from models import transformer, vanilla_rnn, attention_rnn, cnn_discriminator, gan, gru, lstm_local_attn
 import toml
 from preprocess.dataset import BeatsRhythmsDataset
 import torch.utils.data
@@ -9,7 +9,6 @@ import datetime
 from torch.utils.tensorboard.writer import SummaryWriter
 
 from utils.data_paths import DataPaths
-import models.lstm_local_attn as lstm_local_attn
 from utils.metrics import Metrics
 CONFIG_PATH = "./config.toml"
 
@@ -34,9 +33,13 @@ def get_model(name, config, device):
     elif name == "cnn_disc":
         return cnn_discriminator.CNNDiscriminator(config["g_n_notes"], config["g_seq_len"], config["embed_dim"]).to(device)
     elif name == "gan_disc":
-        return gan.Discriminator(config["g_n_notes"], config["g_seq_len"], config["embed_dim"]).to(device)
+        return gan.Discriminator(config["g_n_notes"], config["g_seq_len"], config["embed_dim"], config['dense_hidden_sz'], config["dropout"]).to(device)
     elif name == "gan_gen":
         return gan.Generator(config["n_notes"], config["embed_dim"], config["hidden_dim"]).to(device)
+    elif name == "gru":
+        return gru.DeepBeatsGRU(config["n_notes"], config["embed_dim"], config["hidden_dim"], config["n_layers"], config["dropout"]).to(device)
+    elif name == "vanilla_lstm":
+        return gru.DeepBeatsLSTM(config["n_notes"], config["embed_dim"], config["hidden_dim"], config["n_layers"], config["dropout"]).to(device)
     else:
         raise ValueError("Invalid model name")
 
