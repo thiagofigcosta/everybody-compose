@@ -1,12 +1,12 @@
 # Train
 
-## lstm_attn
+## lstm_local_attn
 - Best epoch: 83, Best Val Accuracy of 0.3316, Best Val Loss of 2.2559
 
 ## vanilla_rnn
 - Best epoch: 134, Best Val Accuracy of 0.2844, Best Val Loss of 2.4372
 
-## attention_rnn
+## lstm_full_attn
 - Best epoch: 134, Best Val Accuracy of 0.3698, Best Val Loss of 2.3594
 
 ## transformer
@@ -18,7 +18,7 @@
 
 # Evaluation
 
-## lstm_attn
+## lstm_local_attn
 
 ### classical
 - Best epoch: None, Best Val Accuracy of 0.2734, Best Val Loss of 2.3492
@@ -54,7 +54,7 @@
 - Best epoch: None, Best Val Accuracy of 0.2014, Best Val Loss of 3.0442
 
 
-## attention_rnn
+## lstm_full_attn
 
 ### classical
 - Best epoch: None, Best Val Accuracy of 0.2797, Best Val Loss of 2.4905

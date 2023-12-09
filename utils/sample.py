@@ -3,7 +3,7 @@ import numpy as np
 import torch
 
 from models.transformer import DeepBeatsTransformer
-from models.attention_rnn import DeepBeatsAttentionRNN
+from models.lstm_full_attn import DeepBeatsAttentionRNN
 from models.lstm_local_attn import DeepBeatsLSTMLocalAttn
 from models.vanilla_rnn import DeepBeatsVanillaRNN
 from utils.distribution import DistributionGenerator, TransformerDistribution, LocalAttnLSTMDistribution, AttentionRNNDistribution, VanillaRNNDistribution

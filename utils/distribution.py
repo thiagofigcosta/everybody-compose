@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Tuple
 import torch
 from models.lstm_local_attn import DeepBeatsLSTMLocalAttn
-from models.attention_rnn import DeepBeatsAttentionRNN
+from models.lstm_full_attn import DeepBeatsAttentionRNN
 from models.transformer import DeepBeatsTransformer
 from models.vanilla_rnn import DeepBeatsVanillaRNN
 

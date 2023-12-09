@@ -18,7 +18,7 @@ num_heads = 8
 src_vocab_size = 2
 tgt_vocab_size = 128
 
-[model.lstm_attn]
+[model.lstm_local_attn]
 lr = 1e-3
 seq_len = 128
 batch_size = 64
@@ -36,7 +36,7 @@ embed_dim = 32
 hidden_dim = 256
 clip_grad = 5.0
 
-[model.attention_rnn]
+[model.lstm_full_attn]
 lr = 1e-3 
 seq_len = 64
 batch_size = 64

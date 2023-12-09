@@ -1,7 +1,7 @@
 from typing import Optional
 import numpy as np
 import torch
-from models import transformer, vanilla_rnn, attention_rnn, cnn_discriminator, gan, gru, lstm_local_attn
+from models import lstm_full_attn, transformer, vanilla_rnn, cnn_discriminator, gan, gru, lstm_local_attn
 import toml
 from preprocess.dataset import BeatsRhythmsDataset
 import torch.utils.data
@@ -13,13 +13,13 @@ from utils.metrics import Metrics
 CONFIG_PATH = "./config.toml"
 
 def get_model(name, config, device):
-    if name == "lstm_attn":
+    if name == "lstm_local_attn":
         return lstm_local_attn.DeepBeatsLSTMLocalAttn(num_notes=config["n_notes"], hidden_dim=config["hidden_dim"],
          dropout_p=config["dropout_p"]).to(device)
     elif name == "vanilla_rnn":
         return vanilla_rnn.DeepBeatsVanillaRNN(config["n_notes"], config["embed_dim"], config["hidden_dim"]).to(device)
-    elif name == "attention_rnn":
-        return attention_rnn.DeepBeatsAttentionRNN(config["n_notes"], config["embed_dim"], config["encode_hidden_dim"], config["decode_hidden_dim"]).to(device)
+    elif name == "lstm_full_attn":
+        return lstm_full_attn.DeepBeatsAttentionRNN(config["n_notes"], config["embed_dim"], config["encode_hidden_dim"], config["decode_hidden_dim"]).to(device)
     elif name == "transformer":
         return transformer.DeepBeatsTransformer(
             num_encoder_layers=config["num_encoder_layers"], 
@@ -52,7 +52,7 @@ def model_forward(model_name, model, input_seq: torch.Tensor, target_seq: torch.
         src_padding_mask, tgt_padding_mask = src_padding_mask.to(device), tgt_padding_mask.to(device)
         output = model(input_seq, target_prev_seq, src_mask, tgt_mask,src_padding_mask, tgt_padding_mask, src_padding_mask)
         output = output.permute(1, 0, 2) # permute back to batch first
-    elif model_name == "attention_rnn" or model_name == "lstm_attn":
+    elif model_name == "lstm_full_attn" or model_name == "lstm_local_attn":
         output = model(input_seq, target_prev_seq)
     else:
         output, _ = model(input_seq, target_prev_seq)

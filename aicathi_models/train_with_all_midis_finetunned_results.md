@@ -1,6 +1,6 @@
 # Train + Evaluation
 
-## lstm_attn
+## lstm_local_attn
 
 ### classical
 - Base: Best epoch: None, Best Val Accuracy of 0.2517, Best Val Loss of 2.3799
@@ -44,7 +44,7 @@
 - Tunned: Best epoch: 17, Best Val Accuracy of 0.3281, Best Val Loss of 2.6181
 
 
-## attention_rnn
+## lstm_full_attn
 
 ### classical
 - Base: Best epoch: None, Best Val Accuracy of 0.2703, Best Val Loss of 2.5200
