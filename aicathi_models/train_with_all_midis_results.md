@@ -12,6 +12,12 @@
 ## transformer
 - Best epoch: 135, Best Val Accuracy of 0.4079, Best Val Loss of 2.0503
 
+## gru
+- Best epoch: 49, Best Val Accuracy of 0.3894, Best Val Loss of 2.0725
+
+## vanilla_lstm
+- Best epoch: 135, Best Val Accuracy of 0.3830, Best Val Loss of 2.0834
+
 ## gan
 - Best epoch: 1, Best Val Accuracy of 0.0793, Best G Val Loss of 0.0073, Best D Val Loss of 0.0044
 
@@ -88,6 +94,42 @@ Best epoch: None, Best Val Accuracy of 0.5469, Best Val Loss of 1.5561
 
 ### soul_reggae
 - Best epoch: None, Best Val Accuracy of 0.4375, Best Val Loss of 1.9815
+
+
+## gru 
+
+### classical
+- Best epoch: None, Best Val Accuracy of 0.3016, Best Val Loss of 2.3000
+
+
+### folk
+- Best epoch: None, Best Val Accuracy of 0.4234, Best Val Loss of 1.8799
+
+
+### pop_rock
+- Best epoch: None, Best Val Accuracy of 0.4826, Best Val Loss of 1.8725
+
+
+### soul_reggae
+- Best epoch: None, Best Val Accuracy of 0.3073, Best Val Loss of 2.6049
+
+
+## vanilla_lstm 
+
+### classical
+- Best epoch: None, Best Val Accuracy of 0.3594, Best Val Loss of 2.1585
+
+
+### folk
+- Best epoch: None, Best Val Accuracy of 0.4766, Best Val Loss of 1.6728
+
+
+### pop_rock
+- Best epoch: None, Best Val Accuracy of 0.5260, Best Val Loss of 1.6507
+
+
+### soul_reggae
+- Best epoch: None, Best Val Accuracy of 0.4132, Best Val Loss of 2.1129
 
 
 ## gan 

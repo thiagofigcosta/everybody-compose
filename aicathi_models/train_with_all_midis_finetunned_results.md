@@ -88,6 +88,50 @@
 - Tunned: Best epoch: 16, Best Val Accuracy of 0.3594, Best Val Loss of 2.4472
 
 
+## gru
+
+### classical
+- Base: Best epoch: None, Best Val Accuracy of 0.2484, Best Val Loss of 2.5728
+- Tunned: Best epoch: 38, Best Val Accuracy of 0.3031, Best Val Loss of 2.3777
+
+
+### folk
+- Base: Best epoch: None, Best Val Accuracy of 0.3891, Best Val Loss of 2.0749
+- Tunned: Best epoch: 24, Best Val Accuracy of 0.4922, Best Val Loss of 1.8257
+
+
+### pop_rock
+- Base: Best epoch: None, Best Val Accuracy of 0.4688, Best Val Loss of 2.0565
+- Tunned: Best epoch: 21, Best Val Accuracy of 0.4809, Best Val Loss of 1.9084
+
+
+### soul_reggae
+- Base: Best epoch: None, Best Val Accuracy of 0.2257, Best Val Loss of 2.8189
+- Tunned: Best epoch: 16, Best Val Accuracy of 0.3299, Best Val Loss of 2.4898
+
+
+## vanilla_lstm
+
+### classical
+- Base: Best epoch: None, Best Val Accuracy of 0.2500, Best Val Loss of 2.5714
+- Tunned: Best epoch: 34, Best Val Accuracy of 0.2844, Best Val Loss of 2.3880
+
+
+### folk
+- Base: Best epoch: None, Best Val Accuracy of 0.3594, Best Val Loss of 2.1412
+- Tunned: Best epoch: 8, Best Val Accuracy of 0.4828, Best Val Loss of 1.8556
+
+
+### pop_rock
+- Base: Best epoch: None, Best Val Accuracy of 0.4583, Best Val Loss of 2.0273
+- Tunned: Best epoch: 21, Best Val Accuracy of 0.4757, Best Val Loss of 1.8847
+
+
+### soul_reggae
+- Base: Best epoch: None, Best Val Accuracy of 0.2396, Best Val Loss of 2.7565
+- Tunned: Best epoch: 57, Best Val Accuracy of 0.3333, Best Val Loss of 2.4693
+
+
 ## gan
 
 ### classical
