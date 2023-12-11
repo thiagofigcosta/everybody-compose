@@ -176,7 +176,7 @@ python3 gan_training.py  -gm gan_gen -dm gan_disc  -g soul_reggae -gc aicathi_mo
 
 3. Fine-tuning
 
-3.1 Train base model
+    3.1 Train base model
 
 ```shell
 python3 train.py -m lstm_local_attn -g midis_except_classical -n 100
@@ -210,7 +210,7 @@ python3 train.py -m vanilla_lstm -g midis_except_pop_rock -n 200
 python3 train.py -m vanilla_lstm -g midis_except_soul_reggae -n 200
 ```
 
-3.2 Evaluate base model
+    3.2 Evaluate base model
 ```shell
 python3 train.py -m lstm_local_attn -g classical -c aicathi_models/lstm_local_attn_all_midis_except_classical_best.pth --test_only
 python3 train.py -m lstm_local_attn -g folk -c aicathi_models/lstm_local_attn_all_midis_except_folk_best.pth --test_only
@@ -243,7 +243,7 @@ python3 train.py -m vanilla_lstm -g pop_rock -c aicathi_models/vanilla_lstm_all_
 python3 train.py -m vanilla_lstm -g soul_reggae -c aicathi_models/vanilla_lstm_all_midis_except_soul_reggae_best.pth --test_only
 ```
 
-3.3 Fine-tune and retrieve results
+    3.3 Fine-tune and retrieve results
 ```bash
 python3 train.py -m lstm_local_attn -g classical -n 50 -c aicathi_models/lstm_local_attn_all_midis_except_classical_best.pth 
 python3 train.py -m lstm_local_attn -g folk -n 50 -c aicathi_models/lstm_local_attn_all_midis_except_folk_best.pth 
