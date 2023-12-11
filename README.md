@@ -124,64 +124,7 @@ pip install -r requirements.txt
 
 ## Commands to run experiments
 
-1. Train models with `classical` genre
-```shell
-python3 train.py -m lstm_local_attn -g classical -n 100
-python3 train.py -m vanilla_rnn -g classical -n 200
-python3 train.py -m lstm_full_attn -g classical -n 150
-python3 train.py -m transformer -g classical -n 200
-python3 train.py -m gru -g classical -n 200
-python3 train.py -m vanilla_lstm -g classical -n 200
-
-python3 gan_training.py  -gm gan_gen -dm gan_disc -g classical -n 400
-```
-
-2. Evaluate metrics for all genres trained with `classical` genre
-```shell
-python3 train.py -m lstm_local_attn -g classical -c aicathi_models/lstm_local_attn_all_classical_best.pth --test_only
-python3 train.py -m lstm_local_attn -g folk -c aicathi_models/lstm_local_attn_all_classical_best.pth --test_only
-python3 train.py -m lstm_local_attn -g pop_rock -c aicathi_models/lstm_local_attn_all_classical_best.pth --test_only
-python3 train.py -m lstm_local_attn -g soul_reggae -c aicathi_models/lstm_local_attn_all_classical_best.pth --test_only
-
-
-python3 train.py -m vanilla_rnn -g classical -c aicathi_models/vanilla_rnn_all_classical_best.pth --test_only
-python3 train.py -m vanilla_rnn -g folk -c aicathi_models/vanilla_rnn_all_classical_best.pth --test_only
-python3 train.py -m vanilla_rnn -g pop_rock -c aicathi_models/vanilla_rnn_all_classical_best.pth --test_only
-python3 train.py -m vanilla_rnn -g soul_reggae -c aicathi_models/vanilla_rnn_all_classical_best.pth --test_only
-
-
-python3 train.py -m lstm_full_attn -g classical -c aicathi_models/lstm_full_attn_all_classical_best.pth --test_only
-python3 train.py -m lstm_full_attn -g folk -c aicathi_models/lstm_full_attn_all_classical_best.pth --test_only
-python3 train.py -m lstm_full_attn -g pop_rock -c aicathi_models/lstm_full_attn_all_classical_best.pth --test_only
-python3 train.py -m lstm_full_attn -g soul_reggae -c aicathi_models/lstm_full_attn_all_classical_best.pth --test_only
-
-
-python3 train.py -m transformer -g classical -c aicathi_models/transformer_all_classical_best.pth --test_only
-python3 train.py -m transformer -g folk -c aicathi_models/transformer_all_classical_best.pth --test_only
-python3 train.py -m transformer -g pop_rock -c aicathi_models/transformer_all_classical_best.pth --test_only
-python3 train.py -m transformer -g soul_reggae -c aicathi_models/transformer_all_classical_best.pth --test_only
-
-
-python3 train.py -m gru -g classical -c aicathi_models/gru_all_classical_best.pth --test_only
-python3 train.py -m gru -g folk -c aicathi_models/gru_all_classical_best.pth --test_only
-python3 train.py -m gru -g pop_rock -c aicathi_models/gru_all_classical_best.pth --test_only
-python3 train.py -m gru -g soul_reggae -c aicathi_models/gru_all_classical_best.pth --test_only
-
-
-python3 train.py -m vanilla_lstm -g classical -c aicathi_models/vanilla_lstm_all_classical_best.pth --test_only
-python3 train.py -m vanilla_lstm -g folk -c aicathi_models/vanilla_lstm_all_classical_best.pth --test_only
-python3 train.py -m vanilla_lstm -g pop_rock -c aicathi_models/vanilla_lstm_all_classical_best.pth --test_only
-python3 train.py -m vanilla_lstm -g soul_reggae -c aicathi_models/vanilla_lstm_all_classical_best.pth --test_only
-
-
-
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g classical -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g folk -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g pop_rock -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
-python3 gan_training.py  -gm gan_gen -dm gan_disc  -g soul_reggae -gc aicathi_models/gan-G-gan_gen_all_classical_best.pth -dc aicathi_models/gan-D-gan_disc_all_classical_best.pth --test_only
-```
-
-3. Train models with all genres
+1. Train models with all genres
 ```shell
 python3 train.py -m lstm_local_attn -g all_midis -n 100
 python3 train.py -m vanilla_rnn -g all_midis -n 200
@@ -189,41 +132,35 @@ python3 train.py -m lstm_full_attn -g all_midis -n 150
 python3 train.py -m transformer -g all_midis -n 200
 python3 train.py -m gru -g all_midis -n 200
 python3 train.py -m vanilla_lstm -g all_midis -n 200
-
 python3 gan_training.py  -gm gan_gen -dm gan_disc -g all_midis -n 400
 ```
 
-4. Evaluate metrics for all genres trained with all genres
+2. Evaluate metrics for all genres trained with all genres
 ```shell
 python3 train.py -m lstm_local_attn -g classical -c aicathi_models/lstm_local_attn_all_all_midis_best.pth --test_only
 python3 train.py -m lstm_local_attn -g folk -c aicathi_models/lstm_local_attn_all_all_midis_best.pth --test_only
 python3 train.py -m lstm_local_attn -g pop_rock -c aicathi_models/lstm_local_attn_all_all_midis_best.pth --test_only
 python3 train.py -m lstm_local_attn -g soul_reggae -c aicathi_models/lstm_local_attn_all_all_midis_best.pth --test_only
 
-
 python3 train.py -m vanilla_rnn -g classical -c aicathi_models/vanilla_rnn_all_all_midis_best.pth --test_only
 python3 train.py -m vanilla_rnn -g folk -c aicathi_models/vanilla_rnn_all_all_midis_best.pth --test_only
 python3 train.py -m vanilla_rnn -g pop_rock -c aicathi_models/vanilla_rnn_all_all_midis_best.pth --test_only
 python3 train.py -m vanilla_rnn -g soul_reggae -c aicathi_models/vanilla_rnn_all_all_midis_best.pth --test_only
-
 
 python3 train.py -m lstm_full_attn -g classical -c aicathi_models/lstm_full_attn_all_all_midis_best.pth --test_only
 python3 train.py -m lstm_full_attn -g folk -c aicathi_models/lstm_full_attn_all_all_midis_best.pth --test_only
 python3 train.py -m lstm_full_attn -g pop_rock -c aicathi_models/lstm_full_attn_all_all_midis_best.pth --test_only
 python3 train.py -m lstm_full_attn -g soul_reggae -c aicathi_models/lstm_full_attn_all_all_midis_best.pth --test_only
 
-
 python3 train.py -m transformer -g classical -c aicathi_models/transformer_all_all_midis_best.pth --test_only
 python3 train.py -m transformer -g folk -c aicathi_models/transformer_all_all_midis_best.pth --test_only
 python3 train.py -m transformer -g pop_rock -c aicathi_models/transformer_all_all_midis_best.pth --test_only
 python3 train.py -m transformer -g soul_reggae -c aicathi_models/transformer_all_all_midis_best.pth --test_only
 
-
 python3 train.py -m gru -g classical -c aicathi_models/gru_all_all_midis_best.pth --test_only
 python3 train.py -m gru -g folk -c aicathi_models/gru_all_all_midis_best.pth --test_only
 python3 train.py -m gru -g pop_rock -c aicathi_models/gru_all_all_midis_best.pth --test_only
 python3 train.py -m gru -g soul_reggae -c aicathi_models/gru_all_all_midis_best.pth --test_only
-
 
 python3 train.py -m vanilla_lstm -g classical -c aicathi_models/vanilla_lstm_all_all_midis_best.pth --test_only
 python3 train.py -m vanilla_lstm -g folk -c aicathi_models/vanilla_lstm_all_all_midis_best.pth --test_only
@@ -237,7 +174,7 @@ python3 gan_training.py  -gm gan_gen -dm gan_disc  -g soul_reggae -gc aicathi_mo
 ```
 
 
-5. Fine tunning and evaluate:
+3. Fine-tuning and evaluate:
 Train base model:
 ```shell
 python3 train.py -m lstm_local_attn -g midis_except_classical -n 100
