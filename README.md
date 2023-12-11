@@ -1,9 +1,10 @@
-# Everybody Compose: Deep Beats To Music 
-Authors: Conghao (Tom) Shen, Violet Yao, Yixin Liu
+# AiCaThi: Using Deep Neural Networks to Generate Music from Beats
+Authors: Aian Shay, Thiago Figueiredo, João Canavarro
 
 ## Abstract
 
-This project presents a deep learning approach to generate monophonic melodies based on input beats, allowing even amateurs to create their own music compositions. Three effective methods - LSTM with Full Attention, LSTM with Local Attention, and Transformer with Relative Position Representation - are proposed for this novel task, providing great variation, harmony, and structure in the generated music. This project allows anyone to compose their own music by tapping their keyboards or ``recoloring'' beat sequences from existing works.
+This project introduces AiCaThi, an approach to AI-driven music generation, focusing on the translation of beats into diverse musical genres using
+deep neural networks. We explore several neural network architectures, including Vanilla RNN and LSTM, LSTM with Local and Full Attention, GRU, and Transformer models trained on a comprehensive dataset covering multiple music genres. Our methodology involves both genre-specific training and fine-tuning, aiming to evaluate the effectiveness of each model in music generation. The results demonstrate that attention-enhanced LSTMs consistently outperform other models, highlighting the importance of attention mechanisms in capturing the intricacies of musical composition. This research contributes to the field of AI music generation by providing insights into the capabilities of different neural network architectures and their application in creating music across various genres.
 
 ## Getting Started
 
@@ -39,6 +40,8 @@ The preprocessed dataset will automatically be downloaded before training. To tr
 
 - `lstm_local_attn`: LSTM with Local Attention
 - `vanilla_rnn`: Decoder Only Vanilla RNN
+- `vanilla_lstm`: Basic LSTM
+- `gru`: Gated Recurrent Unit
 - `lstm_full_attn`: LSTM with Full Attention
 - `transformer`: Transformer RPR
 
@@ -79,6 +82,8 @@ To generate a predicted notes sequence and save it as a MIDI file, run the `pred
 
 - `lstm_local_attn`: LSTM with Local Attention
 - `vanilla_rnn`: Decoder Only Vanilla RNN
+- `vanilla_lstm`: Basic LSTM
+- `gru`: Gated Recurrent Unit
 - `lstm_full_attn`: LSTM with Full Attention
 - `transformer`: Transformer RPR
 
